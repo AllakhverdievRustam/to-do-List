@@ -55,8 +55,6 @@ const onChangeCheckBox = async (index, checkBox) => {
       isCheck: checkChange
     })
   });
-  // let result6 = await response6.json();
-  // allTask = result6.data;
 
   // allTask[index].isCheck = checkChange;
 
@@ -180,7 +178,9 @@ const render = async (indInput) => {
   let result4 = await response4.json();
   allTask = result4.data;
 
-  // console.log(allTask);
+  allTask.sort((element1, element2) => {
+    return element1.isCheck - element2.isCheck;
+  });
 
   const list = document.getElementsByClassName('to-go-list')[0];
 
