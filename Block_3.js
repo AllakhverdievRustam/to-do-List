@@ -1,4 +1,4 @@
-let allTask = JSON.parse(localStorage.getItem('tasks')) || [];
+let allTask = /* JSON.parse(localStorage.getItem('tasks')) || */ [];
 // sessionStorage
 
 let valInput = ''
@@ -7,9 +7,16 @@ let input = null;
 let valInputDone = '';
 let inputDone = null;
 
-window.onload = init = () => {
+window.onload = init = async () => {
   input = document.getElementById('input-id');
   input.addEventListener('change', updateValue);
+
+  const response1 = await fetch('http://localhost:8000/allTasks', {
+    method: 'GET'
+  });
+  let result1 = await response1.json();
+  allTask = result1.data;
+
   render(-1);
 }
 
@@ -35,42 +42,77 @@ const updateValue = (event) => {
   valInput = event.target.value;
 }
 
-const onChangeCheckBox = (index, checkBox) => {
-  allTask[index].isCheck = !allTask[index].isCheck;
+const onChangeCheckBox = async (index, checkBox) => {
+  const checkChange = !allTask[index].isCheck;
+  const response6 = await fetch('http://localhost:8000/updateTask', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allaw-Origin': '*'
+    },
+    body: JSON.stringify({
+      id: allTask[index].id,
+      isCheck: checkChange
+    })
+  });
+  // let result6 = await response6.json();
+  // allTask = result6.data;
 
-  if (checkBox.checked) {
-    allTask.sort((element1, element2) => {
-      return element1.isCheck - element2.isCheck;
-    });
-  } else {
-    allTask.sort((element1, element2) => {
-      return element1.isCheck - element2.isCheck;
-    });
-  }
+  // allTask[index].isCheck = checkChange;
 
-  localStorage.setItem('tasks', JSON.stringify(allTask));
+  // if (checkBox.checked) {
+  //   allTask.sort((element1, element2) => {
+  //     return element1.isCheck - element2.isCheck;
+  //   });
+  // } else {
+  //   allTask.sort((element1, element2) => {
+  //     return element1.isCheck - element2.isCheck;
+  //   });
+  // }
+
+  // // localStorage.setItem('tasks', JSON.stringify(allTask));
   render(-1);
 }
 
-const onClockDeleteAll = () => {
-  localStorage.removeItem('tasks');
+const onClockDeleteAll = async () => {
+  // localStorage.removeItem('tasks');
 
-  allTask.splice(0, allTask.length);
+  // allTask.splice(0, allTask.length);
 
-  render(-1);
+  let response5;
+
+  await allTask.forEach(element => {
+    response5 = fetch(`http://localhost:8000/deleteTask?id=${element.id}`, {
+      method: 'DELETE'
+    });
+    render(-1);
+  });
 }
 
-
-const onClockButton = () => {
+const onClockButton = async () => {
   if (!valInput) {
     alert('Введите задачу!');
   } else {
-    allTask.push({
-      text: valInput,
-      isCheck: false
-    });
+    // allTask.push({
+    //   text: valInput,
+    //   isCheck: false
+    // });
 
-    localStorage.setItem('tasks', JSON.stringify(allTask));
+    const response2 = await fetch('http://localhost:8000/createTask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allaw-Origin': '*'
+      },
+      body: JSON.stringify({
+        text: valInput,
+        isCheck: false
+      })
+    });
+    // let result2 = await response2.json();
+    // allTask = result2.data;
+
+    // localStorage.setItem('tasks', JSON.stringify(allTask));
   
     valInput = '';
     input.value = '';
@@ -83,26 +125,44 @@ const onClickEdit = (index) => {
   render(index);
 }
 
-const onClickDelete = (index) => {
-  allTask.splice(index, 1);
+const onClickDelete = async (index) => {
+  // allTask.splice(index, 1);
 
-  localStorage.setItem('tasks', JSON.stringify(allTask));
+  const response3 = await fetch(`http://localhost:8000/deleteTask?id=${allTask[index].id}`, {
+    method: 'DELETE'
+  });
+
+  // console.log(allTask);
+
+  // localStorage.setItem('tasks', JSON.stringify(allTask));
 
   render(-1);
 }
 
-const onClickDone = (index) => {
+const onClickDone = async (index) => {
   inputDone = document.getElementById('input-done-id');
 
   if (inputDone.value === '') {
     alert('Введите задачу!');
   } else {
-    allTask[index] = {
-      text: inputDone.value,
-      isCheck: false
-    };
+    // allTask[index] = {
+    //   text: inputDone.value,
+    //   isCheck: false
+    // };
 
-    localStorage.setItem('tasks', JSON.stringify(allTask));
+    const response7 = await fetch('http://localhost:8000/updateTask', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allaw-Origin': '*'
+      },
+      body: JSON.stringify({
+        id: allTask[index].id,
+        text: inputDone.value,
+      })
+    });
+
+    // localStorage.setItem('tasks', JSON.stringify(allTask));
   
     render(-1);
   }
@@ -112,7 +172,15 @@ const onClickCancel = () => {
   render(-1);
 }
 
-const render = (indInput) => {
+const render = async (indInput) => {
+
+  const response4 = await fetch('http://localhost:8000/allTasks', {
+    method: 'GET'
+  });
+  let result4 = await response4.json();
+  allTask = result4.data;
+
+  // console.log(allTask);
 
   const list = document.getElementsByClassName('to-go-list')[0];
 
@@ -173,7 +241,7 @@ const render = (indInput) => {
       checkBox.type = 'checkbox';
       checkBox.className = 'checkBox';
       checkBox.checked = element.isCheck;
-      localStorage.setItem('tasks', JSON.stringify(allTask));
+      // localStorage.setItem('tasks', JSON.stringify(allTask));
       checkBox.onchange = () => {
         onChangeCheckBox(index, checkBox);
       };
