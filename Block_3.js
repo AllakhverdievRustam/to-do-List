@@ -49,7 +49,6 @@ const onChangeCheckBox = (index, checkBox) => {
   }
 
   localStorage.setItem('tasks', JSON.stringify(allTask));
-
   render(-1);
 }
 
