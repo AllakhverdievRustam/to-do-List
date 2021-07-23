@@ -60,6 +60,7 @@ const onClockDeleteAll = () => {
   render(-1);
 }
 
+
 const onClockButton = () => {
   if (!valInput) {
     alert('Введите задачу!');
