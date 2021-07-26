@@ -1,5 +1,4 @@
-let allTask = /* JSON.parse(localStorage.getItem('tasks')) || */ [];
-// sessionStorage
+let allTask = [];
 
 let valInput = ''
 let input = null;
@@ -20,24 +19,6 @@ window.onload = init = async () => {
   render(-1);
 }
 
-// const pressEnter = (event) => {
-//   if (event.keyCode === 13) {
-//     if (!valInput) {
-//       alert('Введите задачу!');
-//     } else {
-//       allTask.push({
-//         text: valInput,
-//         isCheck: false
-//       });
-    
-//       valInput = '';
-//       input.value = '';
-    
-//       render(-1);
-//     }
-//   }
-// }
-
 const updateValue = (event) => {
   valInput = event.target.value;
 }
@@ -56,47 +37,23 @@ const onChangeCheckBox = async (index, checkBox) => {
     })
   });
 
-  // allTask[index].isCheck = checkChange;
-
-  // if (checkBox.checked) {
-  //   allTask.sort((element1, element2) => {
-  //     return element1.isCheck - element2.isCheck;
-  //   });
-  // } else {
-  //   allTask.sort((element1, element2) => {
-  //     return element1.isCheck - element2.isCheck;
-  //   });
-  // }
-
-  // // localStorage.setItem('tasks', JSON.stringify(allTask));
   render(-1);
 }
 
 const onClockDeleteAll = async () => {
-  // localStorage.removeItem('tasks');
-
-  // allTask.splice(0, allTask.length);
-
   let response5;
-
-  await allTask.forEach(element => {
-    response5 = fetch(`http://localhost:7000/deleteOne?_id=${element._id}`, {
-      method: 'DELETE'
-    });
-    render(-1);
+  
+  response5 = await fetch('http://localhost:7000/deleteAll', {
+    method: 'DELETE'
   });
+
+  render(-1);
 }
 
 const onClockButton = async () => {
   if (!valInput) {
     alert('Введите задачу!');
   } else {
-
-    // allTask.push({
-    //   text: valInput,
-    //   isCheck: false
-    // });
-
     const response2 = await fetch('http://localhost:7000/createNewTask', {
       method: 'POST',
       headers: {
@@ -108,10 +65,6 @@ const onClockButton = async () => {
         isCheck: false
       })
     });
-    // let result2 = await response2.json();
-    // allTask = result2.data;
-
-    // localStorage.setItem('tasks', JSON.stringify(allTask));
   
     valInput = '';
     input.value = '';
@@ -125,15 +78,9 @@ const onClickEdit = (index) => {
 }
 
 const onClickDelete = async (index) => {
-  // allTask.splice(index, 1);
-
   const response3 = await fetch(`http://localhost:7000/deleteOne?_id=${allTask[index]._id}`, {
     method: 'DELETE'
   });
-
-  // console.log(allTask);
-
-  // localStorage.setItem('tasks', JSON.stringify(allTask));
 
   render(-1);
 }
@@ -144,11 +91,6 @@ const onClickDone = async (index) => {
   if (inputDone.value === '') {
     alert('Введите задачу!');
   } else {
-    // allTask[index] = {
-    //   text: inputDone.value,
-    //   isCheck: false
-    // };
-
     const response7 = await fetch('http://localhost:7000/updateOne', {
       method: 'PATCH',
       headers: {
@@ -161,8 +103,6 @@ const onClickDone = async (index) => {
       })
     });
 
-    // localStorage.setItem('tasks', JSON.stringify(allTask));
-  
     render(-1);
   }
 }
@@ -242,7 +182,6 @@ const render = async (indInput) => {
       checkBox.type = 'checkbox';
       checkBox.className = 'checkBox';
       checkBox.checked = element.isCheck;
-      // localStorage.setItem('tasks', JSON.stringify(allTask));
       checkBox.onchange = () => {
         onChangeCheckBox(index, checkBox);
       };
