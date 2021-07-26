@@ -11,7 +11,7 @@ window.onload = init = async () => {
   input = document.getElementById('input-id');
   input.addEventListener('change', updateValue);
 
-  const response1 = await fetch('http://localhost:8000/allTasks', {
+  const response1 = await fetch('http://localhost:7000/getData', {
     method: 'GET'
   });
   let result1 = await response1.json();
@@ -44,14 +44,14 @@ const updateValue = (event) => {
 
 const onChangeCheckBox = async (index, checkBox) => {
   const checkChange = !allTask[index].isCheck;
-  const response6 = await fetch('http://localhost:8000/updateTask', {
+  const response6 = await fetch('http://localhost:7000/updateOne', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Access-Control-Allaw-Origin': '*'
     },
     body: JSON.stringify({
-      id: allTask[index].id,
+      _id: allTask[index]._id,
       isCheck: checkChange
     })
   });
@@ -80,7 +80,7 @@ const onClockDeleteAll = async () => {
   let response5;
 
   await allTask.forEach(element => {
-    response5 = fetch(`http://localhost:8000/deleteTask?id=${element.id}`, {
+    response5 = fetch(`http://localhost:7000/deleteOne?_id=${element._id}`, {
       method: 'DELETE'
     });
     render(-1);
@@ -91,12 +91,13 @@ const onClockButton = async () => {
   if (!valInput) {
     alert('Введите задачу!');
   } else {
+
     // allTask.push({
     //   text: valInput,
     //   isCheck: false
     // });
 
-    const response2 = await fetch('http://localhost:8000/createTask', {
+    const response2 = await fetch('http://localhost:7000/createNewTask', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -126,7 +127,7 @@ const onClickEdit = (index) => {
 const onClickDelete = async (index) => {
   // allTask.splice(index, 1);
 
-  const response3 = await fetch(`http://localhost:8000/deleteTask?id=${allTask[index].id}`, {
+  const response3 = await fetch(`http://localhost:7000/deleteOne?_id=${allTask[index]._id}`, {
     method: 'DELETE'
   });
 
@@ -148,14 +149,14 @@ const onClickDone = async (index) => {
     //   isCheck: false
     // };
 
-    const response7 = await fetch('http://localhost:8000/updateTask', {
+    const response7 = await fetch('http://localhost:7000/updateOne', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Access-Control-Allaw-Origin': '*'
       },
       body: JSON.stringify({
-        id: allTask[index].id,
+        _id: allTask[index]._id,
         text: inputDone.value,
       })
     });
@@ -172,7 +173,7 @@ const onClickCancel = () => {
 
 const render = async (indInput) => {
 
-  const response4 = await fetch('http://localhost:8000/allTasks', {
+  const response4 = await fetch('http://localhost:7000/getData', {
     method: 'GET'
   });
   let result4 = await response4.json();
