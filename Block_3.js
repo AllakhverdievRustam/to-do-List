@@ -23,7 +23,7 @@ const updateValue = (event) => {
   valInput = event.target.value;
 }
 
-const onChangeCheckBox = async (index, checkBox) => {
+const onChangeCheckBox = async (index) => {
   const checkChange = !allTask[index].isCheck;
   const response6 = await fetch('http://localhost:7000/updateOne', {
     method: 'PATCH',
@@ -42,7 +42,7 @@ const onChangeCheckBox = async (index, checkBox) => {
 
 const onClockDeleteAll = async () => {
   let response5;
-  
+
   response5 = await fetch('http://localhost:7000/deleteAll', {
     method: 'DELETE'
   });
@@ -183,7 +183,7 @@ const render = async (indInput) => {
       checkBox.className = 'checkBox';
       checkBox.checked = element.isCheck;
       checkBox.onchange = () => {
-        onChangeCheckBox(index, checkBox);
+        onChangeCheckBox(index);
       };
 
       text = document.createElement('p');
