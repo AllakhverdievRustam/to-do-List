@@ -24,7 +24,7 @@ const updateValue = (event) => {
 }
 
 const onChangeCheckBox = async (index) => {
-  const { _id, test, isCheck, __v} = allTask[index];
+  const { _id, test, isCheck, __v } = allTask[index];
 
   const response6 = await fetch('http://localhost:7000/updateOne', {
     method: 'PATCH',
@@ -33,7 +33,7 @@ const onChangeCheckBox = async (index) => {
       'Access-Control-Allaw-Origin': '*'
     },
     body: JSON.stringify({
-      _id: _id,
+      _id,
       isCheck: !isCheck
     })
   });
@@ -87,7 +87,7 @@ const onClickDelete = async (index) => {
 }
 
 const onClickDone = async (index) => {
-  const { _id, test, isCheck, __v} = allTask[index];
+  const { _id, test, isCheck, __v } = allTask[index];
 
   inputDone = document.getElementById('input-done-id');
 
@@ -101,7 +101,7 @@ const onClickDone = async (index) => {
         'Access-Control-Allaw-Origin': '*'
       },
       body: JSON.stringify({
-        _id: _id,
+        _id,
         text: inputDone.value,
       })
     });
