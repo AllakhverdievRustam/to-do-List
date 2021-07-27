@@ -43,7 +43,7 @@ const onChangeCheckBox = async (index) => {
 
 const onClockDeleteAll = async () => {
   let response5;
-  
+
   response5 = await fetch('http://localhost:7000/deleteAll', {
     method: 'DELETE'
   });
